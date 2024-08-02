@@ -1,0 +1,32 @@
+<div class="min-h-screen flex items-center justify-center bg-gray-900">
+  <div class="bg-gray-800 p-8 rounded-lg shadow-md w-full max-w-md">
+    <h2 class="text-2xl font-bold mb-6 text-white text-center">Register</h2>
+    <form (ngSubmit)="onRegister()">
+      <div class="mb-6 flex flex-col items-center">
+        <label for="profilePhoto" class="block text-gray-300">Profile Photo</label>
+        <div class="relative">
+          <!-- Hidden input -->
+          <input type="file" id="profilePhoto" (change)="onFileChange($event)" class="hidden" accept="image/*">
+          <!-- Circular preview -->
+          <label for="profilePhoto" class="cursor-pointer">
+            <div class="w-32 h-32 rounded-full overflow-hidden border-4 border-gray-700 flex items-center justify-center bg-gray-600">
+              <img *ngIf="filePreview" [src]="filePreview" alt="File Preview" class="w-full h-full object-cover">
+              <svg *ngIf="!filePreview" class="w-12 h-12 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7a4 4 0 014-4h12a4 4 0 014 4v10a4 4 0 01-4 4H7a4 4 0 01-4-4V7z"></path>
+              </svg>
+            </div>
+          </label>
+        </div>
+      </div>
+      <div class="mb-4">
+        <label for="email" class="block text-gray-300">Email</label>
+        <input type="email" id="email" [(ngModel)]="registerData.email" name="email" class="w-full p-2 border border-gray-600 rounded mt-1 bg-gray-700 text-white" required>
+      </div>
+      <div class="mb-4">
+        <label for="password" class="block text-gray-300">Password</label>
+        <input type="password" id="password" [(ngModel)]="registerData.password" name="password" class="w-full p-2 border border-gray-600 rounded mt-1 bg-gray-700 text-white" required>
+      </div>
+      <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded mt-4 hover:bg-blue-700">Register</button>
+    </form>
+  </div>
+</div>

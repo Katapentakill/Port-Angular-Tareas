@@ -1,0 +1,29 @@
+<!-- Flex container for status columns -->
+<div class="flex flex-nowrap space-x-4 py-2">
+  <!-- Itera sobre los estados y muestra cada uno -->
+  <div *ngFor="let status of statuses" class="relative flex-none w-80 bg-gray-800 p-4 rounded-lg">
+    <button class="absolute top-2 right-2 p-2 bg-red-600 rounded-full hover:bg-red-700"
+            (click)="deleteStatus(status.id)">
+      <!-- Icono o texto del botón -->
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+    <h2 class="text-2xl font-bold mb-4">{{ status.name }}</h2>
+
+    <!-- Aquí se usa el componente TaskComponent -->
+    <app-task [status]="status"></app-task>
+  </div>
+
+  <!-- Opción para añadir un nuevo estado -->
+  <div class="flex-none w-80 bg-gray-800 p-4 rounded-lg flex items-center justify-center cursor-pointer hover:bg-gray-700" (click)="openAddStatusForm()">
+    <span class="text-blue-400 font-semibold">+ Añadir otra lista</span>
+  </div>
+
+  <!-- Modal para añadir un nuevo estado -->
+  <app-add-status-modal
+    [isOpen]="OpenModalAddStatus"
+    (close)="closeModal()"
+    (statusCreated)="onStatusCreated()">
+  </app-add-status-modal>
+</div>

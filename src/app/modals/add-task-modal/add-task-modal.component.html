@@ -1,0 +1,46 @@
+<div *ngIf="isOpen" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-10">
+  <div class="bg-gray-800 p-6 rounded-lg w-3/4 max-w-3xl relative z-50">
+    <button class="absolute top-2 right-2 text-gray-500 hover:text-white" (click)="onClose()">
+      &times;
+    </button>
+    <h3 class="text-2xl font-semibold mb-4">Añadir Tarea</h3>
+    <form (ngSubmit)="onSubmit($event)">
+      <div class="mb-4">
+        <label class="block text-gray-400 mb-2" for="taskName">Nombre de la tarea</label>
+        <input [(ngModel)]="newTask.name" id="taskName" name="taskName" class="w-full p-2 bg-gray-700 rounded-lg" />
+      </div>
+      <div class="mb-4">
+        <label class="block text-gray-400 mb-2" for="taskDescription">Descripción</label>
+        <textarea [(ngModel)]="newTask.description" id="taskDescription" name="taskDescription" class="w-full p-2 bg-gray-700 rounded-lg"></textarea>
+      </div>
+      <div class="mb-4">
+        <label class="block text-gray-400 mb-2" for="taskDueDate">Fecha de vencimiento</label>
+        <input [(ngModel)]="newTask.dueDate" type="date" id="taskDueDate" name="taskDueDate" class="w-full p-2 bg-gray-700 rounded-lg" />
+      </div>
+      <div class="mb-4">
+        <label class="block text-gray-400 mb-2" for="skills">Habilidades</label>
+        <input [(ngModel)]="newSkill" (keydown)="addSkill($event)" id="skills" name="skills" class="w-full p-2 bg-gray-700 rounded-lg" />
+        <div class="mt-2">
+          <div *ngFor="let skill of skills" class="inline-flex items-center bg-blue-600 text-white rounded-lg px-2 py-1 mr-2 mb-2">
+            {{ skill }}
+            <button type="button" (click)="removeSkill(skill)" class="ml-2 text-xs bg-red-600 text-white rounded-full w-4 h-4 flex items-center justify-center"></button>
+          </div>
+        </div>
+      </div>
+      <div class="mb-4">
+        <label class="block text-gray-400 mb-2" for="expertise">Experiencia</label>
+        <input [(ngModel)]="newExpertise" (keydown)="addExpertise($event)" id="expertise" name="expertise" class="w-full p-2 bg-gray-700 rounded-lg" />
+        <div class="mt-2">
+          <div *ngFor="let expertise of expertiseList" class="inline-flex items-center bg-green-600 text-white rounded-lg px-2 py-1 mr-2 mb-2">
+            {{ expertise }}
+            <button type="button" (click)="removeExpertise(expertise)" class="ml-2 text-xs bg-red-600 text-white rounded-full w-4 h-4 flex items-center justify-center"></button>
+          </div>
+        </div>
+      </div>
+      <div class="flex justify-end">
+        <button type="button" (click)="onClose()" class="mr-4 bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded-lg">Cancelar</button>
+        <button type="submit" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg">Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>

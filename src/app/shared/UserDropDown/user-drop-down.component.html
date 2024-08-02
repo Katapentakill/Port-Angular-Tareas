@@ -1,0 +1,16 @@
+<div class="mt-4">
+  <label class="block text-gray-400 mb-2">Asignar usuario</label>
+  <div class="relative">
+    <button class="w-full p-2 bg-gray-700 rounded-lg text-gray-300 flex justify-between items-center" (click)="toggleUserDropdown()">
+      {{ selectedUser ? selectedUser.email : 'Selecciona un usuario' }}
+      <span class="text-gray-500">&#9660;</span>
+    </button>
+    <div *ngIf="isUserDropdownOpen" class="absolute left-0 w-full mt-1 bg-gray-700 rounded-lg shadow-lg z-30">
+      <ul class="max-h-60 overflow-y-auto">
+        <li *ngFor="let user of users" (click)="assignUserToTask(user)" class="p-2 hover:bg-gray-600 cursor-pointer">
+          {{ user.email }}
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

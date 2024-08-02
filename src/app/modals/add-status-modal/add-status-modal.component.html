@@ -1,0 +1,26 @@
+<div *ngIf="isOpen" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+  <!-- Contenedor del modal -->
+  <div class="bg-gray-800 p-6 rounded-lg w-3/4 max-w-3xl relative">
+    <!-- Botón para cerrar el modal -->
+    <button class="absolute top-2 right-2 text-gray-500 hover:text-white" (click)="onClose()">
+      &times; <!-- Icono de cerrar -->
+    </button>
+    <!-- Título del modal -->
+    <h3 class="text-2xl font-semibold mb-4">Añadir Estado</h3>
+    <!-- Formulario para añadir un nuevo estado -->
+    <form (ngSubmit)="onSubmit()">
+      <!-- Campo para el nombre del estado -->
+      <div class="mb-4">
+        <label class="block text-gray-400 mb-2" for="statusName">Nombre del estado</label>
+        <input [(ngModel)]="newStatusName" id="statusName" name="statusName" class="w-full p-2 bg-gray-700 rounded-lg" />
+      </div>
+      <!-- Botones de acción -->
+      <div class="flex justify-end">
+        <!-- Botón para cancelar y cerrar el modal -->
+        <button type="button" (click)="onClose()" class="mr-4 bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded-lg">Cancelar</button>
+        <!-- Botón para guardar el nuevo estado -->
+        <button type="submit" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg">Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>

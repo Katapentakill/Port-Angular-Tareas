@@ -1,0 +1,41 @@
+<!-- Task Component Template -->
+<div *ngIf="!(statusesWithTasks.get(status.id)?.length)" class="text-gray-400">
+  No hay tareas en este estado.
+</div>
+
+<!-- Itera sobre las tareas del estado y muestra cada una -->
+<div *ngFor="let task of statusesWithTasks.get(status.id) || []"
+    class="bg-gray-700 p-4 mb-4 rounded-lg shadow cursor-pointer hover:bg-gray-600 relative"
+    (click)="openTaskDetails(task)">
+  <!-- Botón para eliminar una tarea -->
+  <button class="absolute top-2 right-2 p-1 bg-red-600 rounded-full hover:bg-red-700"
+          (click)="deleteTask(task.id, status.id); $event.stopPropagation();">
+    <!-- Icono o texto del botón (puedes agregar uno aquí) -->
+  </button>
+  <!-- Nombre de la tarea -->
+  <h3 class="text-lg font-semibold">{{ task.name }}</h3>
+  <!-- Etiquetas de la tarea -->
+  <div class="flex flex-wrap mt-2">
+    <span *ngFor="let tag of task.tags" class="inline-block px-2 py-1 m-1 rounded-full text-xs" [ngStyle]="{'background-color': tag.color}">
+      {{ tag.name }}
+    </span>
+  </div>
+</div>
+<!-- Opción para agregar una nueva tarea -->
+<div class="flex items-center justify-center mt-4 cursor-pointer text-blue-400 hover:underline" (click)="openAddTaskModal(status.id)">
+  + Añadir una tarea
+</div>
+
+<!-- Modal para mostrar detalles de la tarea -->
+<app-task-details-modal
+  *ngIf="isTaskDetailsModalOpen"
+  [task]="selectedTask"
+  (close)="closeTaskDetailsModal()">
+</app-task-details-modal>
+
+<!-- Modal para añadir una nueva tarea -->
+<app-add-task-modal
+  [isOpen]="isAddTaskModalOpen"
+  [currentStatusId]="currentStatusId"
+  (close)="closeAddTaskModal()">
+</app-add-task-modal>

@@ -1,0 +1,19 @@
+<div *ngIf="isOpen" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+  <div class="bg-gray-800 p-6 rounded-lg w-96">
+    <h2 class="text-2xl font-bold mb-4">Crear nuevo tag</h2>
+    <form [formGroup]="tagForm" (ngSubmit)="onSubmit()">
+      <div class="mb-4">
+        <label for="name" class="block text-sm font-medium text-gray-200">Nombre</label>
+        <input id="name" type="text" formControlName="name" class="mt-1 p-2 bg-gray-700 rounded w-full">
+      </div>
+      <div class="mb-4">
+        <label for="color" class="block text-sm font-medium text-gray-200">Color</label>
+        <input id="color" type="color" formControlName="color" class="mt-1 p-2 bg-gray-700 rounded w-full">
+      </div>
+      <div class="flex justify-end">
+        <button type="button" (click)="closeModal()" class="bg-red-600 px-4 py-2 rounded mr-2 hover:bg-red-700">Cancelar</button>
+        <button type="submit" class="bg-blue-600 px-4 py-2 rounded hover:bg-blue-700">Crear</button>
+      </div>
+    </form>
+  </div>
+</div>
