@@ -1,24 +1,40 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { TaskService } from '../../services/task.service';
+import { EventService } from '../../services/event.service';
 import { Task, TaskCreateDto } from '../../models/task.model';
 
 @Component({
   selector: 'app-task',
   templateUrl: './task.component.html',
 })
-export class TaskComponent implements OnInit {
+export class TaskComponent implements OnInit, OnDestroy {
   @Input() status: any; // Cambia 'any' por el tipo adecuado si tienes uno definido
-  statusesWithTasks: Map<number, Task[]> = new Map(); // Usa el tipo adecuado para tus tareas
+  statusesWithTasks: Map<number, Task[]> = new Map();
   selectedTask: Task | null = null;
   isTaskDetailsModalOpen: boolean = false;
   isAddTaskModalOpen: boolean = false;
   currentStatusId: number | undefined = undefined;
+  private eventSubscription?: Subscription;
 
-  constructor(private taskService: TaskService) {}
+  constructor(private taskService: TaskService, private eventService: EventService) {}
 
   ngOnInit(): void {
     if (this.status && this.status.id) {
       this.loadTasksForStatus(this.status.id);
+    }
+    this.eventSubscription = this.eventService.taskUpdated$.subscribe(
+      (taskId: number) => {
+        if (this.status && this.status.id) {
+          this.loadTasksForStatus(this.status.id); // Recarga las tareas para el status actual
+        }
+      }
+    );
+  }
+
+  ngOnDestroy(): void {
+    if (this.eventSubscription) {
+      this.eventSubscription.unsubscribe();
     }
   }
 
@@ -57,10 +73,9 @@ export class TaskComponent implements OnInit {
 
   openAddTaskModal(statusId: number): void {
     this.currentStatusId = statusId;
-    console.log('Current Status ID:', this.currentStatusId); // Imprime el statusId cuando se abre el modal
+    console.log('Current Status ID:', this.currentStatusId);
     this.isAddTaskModalOpen = true;
   }
-
 
   closeAddTaskModal(): void {
     this.isAddTaskModalOpen = false;

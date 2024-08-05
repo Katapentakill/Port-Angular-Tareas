@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { Task, UserDto, UserProfileRecommend } from '../../models/task.model';
 import { UserService } from 'src/app/services/user.service';
 import { RecommendedService } from 'src/app/services/recommended.service';
@@ -7,12 +7,15 @@ import { RecommendedService } from 'src/app/services/recommended.service';
   selector: 'app-task-details-modal',
   templateUrl: './details-task-modal.component.html',
 })
-export class TaskDetailsModalComponent implements OnInit {
+export class TaskDetailsModalComponent implements OnInit, OnChanges {
   @Input() task: Task | null = null;
   @Output() close = new EventEmitter<void>();
   userTask: UserDto | null = null;
   isTagSelectionModalOpen = false;
-  recommendedUsers: UserDto[] = []; // Variable para almacenar usuarios recomendados
+  recommendedUsers: UserDto[] = [];
+  isLoading: boolean = false;
+  isUserModalOpen: boolean = false;
+  isUserModalOpenRecommend: boolean = false;
 
   constructor(
     private userService: UserService,
@@ -20,8 +23,17 @@ export class TaskDetailsModalComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.loadUserData();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['task'] && this.isUserModalOpen) {
+      this.loadUserData();
+    }
+  }
+
+  private loadUserData(): void {
     if (this.task && this.task.userId !== undefined && this.task.userId !== null) {
-      console.log("id de usuario en tarea: ", this.task.userId)
       this.userService.getUserById(this.task.userId).subscribe(
         (user: UserDto) => {
           this.userTask = user;
@@ -34,6 +46,7 @@ export class TaskDetailsModalComponent implements OnInit {
   }
 
   closeModal(): void {
+    console.log('Cerrando modal de detalles de tarea');
     this.close.emit();
   }
 
@@ -45,18 +58,27 @@ export class TaskDetailsModalComponent implements OnInit {
     this.isTagSelectionModalOpen = false;
   }
 
+  openUserModal(): void {
+    console.log('Abriendo modal de usuarios');
+    this.isUserModalOpen = true;
+  }
+
+  closeUserModal(): void {
+    console.log('Cerrando modal de usuarios');
+    this.isUserModalOpen = false;
+  }
+
+  closeUserModalRecommend(): void {
+    console.log('Cerrando modal de usuarios recomendados');
+    this.isUserModalOpenRecommend = false;
+  }
+
   getRecommendations(): void {
     if (this.task) {
-      // Obtener los datos para enviar
+      this.isLoading = true;
       const requiredSkillsNormalized = this.task.requiredSkillsNormalized ?? '';
       const requiredExpertiseNormalized = this.task.requiredExpertiseNormalized ?? '';
       const descriptionNormalized = this.task.descriptionNormalized ?? '';
-
-      // Imprimir los datos en la consola
-      console.log('Datos enviados a la solicitud de recomendaciones:');
-      console.log('requiredSkillsNormalized:', requiredSkillsNormalized);
-      console.log('requiredExpertiseNormalized:', requiredExpertiseNormalized);
-      console.log('descriptionNormalized:', descriptionNormalized);
 
       this.recommendedService.getSimilarity(
         requiredSkillsNormalized,
@@ -64,30 +86,23 @@ export class TaskDetailsModalComponent implements OnInit {
         descriptionNormalized
       ).subscribe(
         (recommendedProfiles: UserProfileRecommend[]) => {
-          console.log('Datos de usuarios recomendados recibidos:');
-          console.log(recommendedProfiles);
-
           const recommendedEmails = recommendedProfiles.map(profile => profile.email);
-          console.log('Emails recomendados:', recommendedEmails);
-
-          // Obtener todos los usuarios
           this.userService.getAllUsers().subscribe(
             (allUsers: UserDto[]) => {
-              console.log('Datos de todos los usuarios recibidos:');
-              console.log(allUsers);
-
-              // Filtrar los usuarios recomendados
               this.recommendedUsers = allUsers.filter(user => recommendedEmails.includes(user.email));
-              console.log('Usuarios recomendados filtrados:');
-              console.log(this.recommendedUsers);
+              console.log('Usuarios recomendados:', this.recommendedUsers);
+              this.isLoading = false;
+              this.isUserModalOpenRecommend = true; // Abre el modal después de obtener las recomendaciones
             },
             (error) => {
               console.error('Error fetching all users:', error);
+              this.isLoading = false;
             }
           );
         },
         (error) => {
           console.error('Error fetching recommendations:', error);
+          this.isLoading = false;
         }
       );
     }

@@ -8,6 +8,8 @@ import { SharedModule } from '../shared/shared.module';
 import { AddTaskModalComponent } from './add-task-modal/add-task-modal.component';
 import { TagSelectionModalComponent } from './details-tag-by-task-modal/details-tag-by-task-modal.component';
 import { TagFunctionsComponent } from './tag-functions-modal/tag-functions-modal.component';
+import { UserModalReccomendedComponent } from './user-recommend-modal/user-modal.component';
+import { UserModalComponent } from './user-totals-modal/user-totals-modal.component';
 
 @NgModule({
   declarations: [
@@ -15,7 +17,9 @@ import { TagFunctionsComponent } from './tag-functions-modal/tag-functions-modal
     TaskDetailsModalComponent,
     AddTaskModalComponent,
     TagSelectionModalComponent,
-    TagFunctionsComponent
+    TagFunctionsComponent,
+    UserModalReccomendedComponent,
+    UserModalComponent
   ],
   imports: [
     CommonModule,
@@ -28,7 +32,9 @@ import { TagFunctionsComponent } from './tag-functions-modal/tag-functions-modal
     TaskDetailsModalComponent,
     AddTaskModalComponent,
     TagSelectionModalComponent,
-    TagFunctionsComponent
+    TagFunctionsComponent,
+    UserModalReccomendedComponent,
+    UserModalComponent
   ],
   providers: [
     // Puedes agregar servicios aquí si son específicos para este módulo

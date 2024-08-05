@@ -1,0 +1,19 @@
+<div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50" *ngIf="isOpen">
+  <div class="bg-gray-800 p-6 rounded-lg w-3/4 max-w-4xl h-3/4 overflow-y-auto relative">
+    <button class="absolute top-2 right-2 text-gray-500 hover:text-white" (click)="closeModal()">
+      &times;
+    </button>
+    <!-- Lista de usuarios -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div *ngFor="let user of filteredUsers" class="bg-gray-900 p-4 rounded-lg cursor-pointer" (click)="assignUserToTask(user)">
+        <img *ngIf="user.image" [src]="user.image" alt="{{ user.name }}" class="w-full h-32 object-cover rounded-lg mb-4">
+        <h4 class="text-lg font-semibold">{{ user.name }} {{ user.lastname }}</h4>
+        <p class="text-gray-400">Email: {{ user.email }}</p>
+        <p class="text-gray-400">Job: {{ user.job }}</p>
+        <p class="text-gray-400">Curriculum: {{ user.curriculum }}</p>
+        <p class="text-gray-400">Skills: {{ user.skills || 'N/A' }}</p>
+        <p class="text-gray-400">Expertise: {{ user.expertise || 'N/A' }}</p>
+      </div>
+    </div>
+  </div>
+</div>

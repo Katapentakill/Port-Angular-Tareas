@@ -1,10 +1,47 @@
-  <!-- Encabezado -->
-  <header class="flex justify-between items-center p-4 bg-gray-800">
-    <div class="text-2xl font-bold">Gestión de tareas</div>
-    <div>
-      <!-- Enlaces de navegación para login y registro -->
-      <a routerLink="/auth/login" class="mr-4 text-blue-400 hover:underline">Login</a>
-      <a routerLink="/auth/register" class="text-blue-400 hover:underline">Register</a>
-    </div>
-  </header>
+<header class="flex justify-between items-center p-4 bg-gray-800">
+  <div class="text-2xl font-bold text-white">
+    <ng-container *ngIf="router.url === '/board'; else otherTitle">
+      Gestión de tareas
+    </ng-container>
+    <ng-template #otherTitle>
+      <ng-container *ngIf="router.url === '/users'; else registerTitle">
+        Gestión de usuarios
+      </ng-container>
+    </ng-template>
+    <ng-template #registerTitle>
+      <ng-container *ngIf="router.url === '/register'; else defaultTitle">
+        Registro
+      </ng-container>
+    </ng-template>
+    <ng-template #defaultTitle>
+      Default Title
+    </ng-template>
+  </div>
+  <div class="flex space-x-4">
+    <!-- Botón "Board" desaparece si estás en la página de board -->
+    <ng-container *ngIf="router.url !== '/board'">
+      <button (click)="goToBoard()" class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700">
+        Board
+      </button>
+    </ng-container>
+
+    <!-- Botón "Users" desaparece si estás en la página de users -->
+    <ng-container *ngIf="router.url !== '/users'">
+      <button (click)="goToUsers()" class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700">
+        Users
+      </button>
+    </ng-container>
+
+    <!-- Botón "Register" desaparece si estás en la página de register -->
+    <ng-container *ngIf="router.url !== '/register'">
+      <button (click)="goToRegister()" class="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700">
+        Register
+      </button>
+    </ng-container>
+
+    <button (click)="logout()" class="bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700">
+      Logout
+    </button>
+  </div>
+</header>
 

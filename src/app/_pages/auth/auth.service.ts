@@ -1,8 +1,8 @@
-// src/app/auth/auth.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { JwtPayload } from "./jwt-payload.interface"
+import { JwtPayload } from "./jwt-payload.interface";
+import { User } from 'src/app/models/task.model';
 
 @Injectable({
   providedIn: 'root'
@@ -12,11 +12,19 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
-  // Método para registrar un nuevo usuario
-  register(email: string, password: string): Observable<{ token: string }> {
+  // Método para registrar un usuario
+  register(registerData: {
+    name: string;
+    lastname: string;
+    email: string;
+    password: string;
+    job?: string;
+    curriculum?: string;
+    skills?: string;
+    expertise?: string;
+  }): Observable<User> {
     const url = `${this.apiUrl}/register`; // Endpoint de registro
-    const body = { email, password };
-    return this.http.post<{ token: string }>(url, body);
+    return this.http.post<User>(url, registerData);
   }
 
   // Método para autenticar un usuario
@@ -42,9 +50,15 @@ export class AuthService {
     const token = localStorage.getItem('authToken');
     if (!token) return null;
 
-    // Decodificar el token (asegúrate de instalar la biblioteca jwt-decode)
+    // Decodificar el token
     const decoded = this.decodeToken(token);
     return decoded;
+  }
+
+  // Método para verificar si el usuario tiene rol "Admin"
+  isAdmin(): boolean {
+    const payload = this.getTokenPayload();
+    return payload ? payload.role === 'Admin' : false;
   }
 
   private decodeToken(token: string): JwtPayload | null {

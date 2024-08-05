@@ -41,6 +41,22 @@ export interface TaskCreateDto {
   dueDate: string;
 }
 
+export interface User {
+  id: number;
+  email: string;
+  name: string;
+  lastname: string;
+  job?: string;
+  curriculum?: string;
+  curriculumNormalized?: string;
+  password: string;
+  image?: string;
+  roleId: number;
+  skills?: string;
+  skillsNormalized?: string;
+  expertise?: string;
+  expertiseNormalized?: string;
+}
 
 export interface UserDto {
   id: number

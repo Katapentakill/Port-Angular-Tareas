@@ -1,0 +1,48 @@
+<div class="min-h-screen bg-gray-900 text-white">
+  <app-header></app-header> <!-- Encabezado compartido -->
+
+  <div class="p-4">
+    <div class="flex flex-wrap gap-4 justify-center">
+      <input type="text" placeholder="Nombre" [(ngModel)]="searchParams.name" class="p-2 bg-gray-800 rounded w-full sm:max-w-xs md:max-w-sm lg:max-w-md">
+      <input type="text" placeholder="Apellido" [(ngModel)]="searchParams.lastname" class="p-2 bg-gray-800 rounded w-full sm:max-w-xs md:max-w-sm lg:max-w-md">
+      <input type="email" placeholder="Email" [(ngModel)]="searchParams.email" class="p-2 bg-gray-800 rounded w-full sm:max-w-xs md:max-w-sm lg:max-w-md">
+      <input type="text" placeholder="Trabajo" [(ngModel)]="searchParams.job" class="p-2 bg-gray-800 rounded w-full sm:max-w-xs md:max-w-sm lg:max-w-md">
+      <button (click)="onSearch()" class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 w-full sm:max-w-xs md:max-w-sm lg:max-w-md mb-2">
+        Buscar
+      </button>
+    </div>
+
+    <div *ngIf="users.length === 0" class="text-gray-500">No se encontraron usuarios.</div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      <div *ngFor="let user of users" class="bg-gray-800 p-4 rounded-lg relative">
+        <!-- Botón de eliminar en la esquina superior derecha -->
+        <button (click)="openConfirmDialog(user.id)" class="absolute top-2 right-2 text-red-600 hover:text-red-700">
+          &#10006;
+        </button>
+        <img *ngIf="user.image" [src]="user.image" alt="{{ user.name }}" class="w-full h-48 object-cover rounded-lg mb-4">
+        <h4 class="text-lg font-semibold">{{ user.name }} {{ user.lastname }}</h4>
+        <p class="text-gray-400">Email: {{ user.email }}</p>
+        <p class="text-gray-400">Job: {{ user.job }}</p>
+        <p class="text-gray-400">Curriculum: {{ user.curriculum }}</p>
+        <p class="text-gray-400">Skills: {{ user.skills || 'N/A' }}</p>
+        <p class="text-gray-400">Expertise: {{ user.expertise || 'N/A' }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de confirmación -->
+  <div *ngIf="showConfirmDialog" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75">
+    <div class="bg-gray-900 p-6 rounded-lg">
+      <h3 class="text-lg font-semibold mb-4">Confirmación de eliminación</h3>
+      <p class="mb-4">¿Estás seguro de que deseas eliminar este usuario?</p>
+      <div class="flex justify-end gap-4">
+        <button (click)="confirmDelete()" class="bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700">
+          Confirmar
+        </button>
+        <button (click)="cancelDelete()" class="bg-gray-600 text-white py-2 px-4 rounded hover:bg-gray-700">
+          Cancelar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

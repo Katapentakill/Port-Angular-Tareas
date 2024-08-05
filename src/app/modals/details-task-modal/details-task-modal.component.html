@@ -1,33 +1,54 @@
 <div *ngIf="task" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
   <div class="bg-gray-800 p-6 rounded-lg w-3/4 max-w-3xl relative">
+    <!-- Botón para cerrar el modal -->
     <button class="absolute top-2 right-2 text-gray-500 hover:text-white" (click)="closeModal()">
       &times;
     </button>
+
+    <!-- Contenido del modal -->
     <h3 class="text-2xl font-semibold mb-4">{{ task?.name }}</h3>
     <p class="text-gray-300">{{ task?.description }}</p>
     <p class="text-gray-500 text-sm">Creada el: {{ task?.creationDate | date:'shortDate' }}</p>
     <p class="text-gray-500 text-sm">Fecha de vencimiento: {{ task?.dueDate | date:'shortDate' }} a las {{ task?.dueDate | date:'shortTime' }}</p>
     <p class="text-gray-500 text-sm">Usuario asignado: {{ userTask?.email }}</p>
 
-    <!-- Botón para obtener recomendaciones -->
-    <button (click)="getRecommendations()" class="mt-4 bg-green-600 hover:bg-green-500 text-white px-4 py-2 rounded-lg">
-      Obtener Recomendaciones
-    </button>
-
-    <!-- Lista de usuarios recomendados -->
-    <div *ngIf="recommendedUsers.length > 0" class="mt-4">
-      <h4 class="text-lg font-semibold text-white">Usuarios Recomendados:</h4>
-      <ul class="list-disc pl-5 text-gray-300">
-        <li *ngFor="let user of recommendedUsers">
-          {{ user.email }}
-        </li>
-      </ul>
+    <!-- Spinner -->
+    <div *ngIf="isLoading" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+      <div class="animate-spin rounded-full h-32 w-32 border-t-4 border-b-4 border-white"></div>
     </div>
 
-    <!-- Integrar el UserDropDown -->
-    <app-user-drop-down [task]="task"></app-user-drop-down>
+    <!-- Contenedor para los botones -->
+    <div class="flex flex-col space-y-4 mt-4">
+      <!-- Botón para obtener recomendaciones y abrir el modal de usuarios recomendados -->
+      <button (click)="getRecommendations()" class="bg-green-600 hover:bg-green-500 text-white px-4 py-2 rounded-lg" [disabled]="isLoading">
+        Obtener Recomendaciones
+      </button>
 
-    <button (click)="openTagSelectionModal()" class="mt-4 bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg">Asignar Etiquetas</button>
+      <!-- Botón para abrir el modal de todos los usuarios -->
+      <button (click)="openUserModal()" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg">
+        Asignar Usuario
+      </button>
+
+      <!-- Botón para abrir el modal de selección de etiquetas -->
+      <button (click)="openTagSelectionModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-lg">
+        Asignar Etiquetas
+      </button>
+    </div>
+
+    <!-- Modal de usuarios recomendados -->
+    <app-user-modal
+      [task]="task"
+      [isOpen]="isUserModalOpenRecommend"
+      [filteredUsers]="recommendedUsers"
+      (close)="closeUserModalRecommend()">
+    </app-user-modal>
+
+    <!-- Modal de usuarios -->
+    <app-totals-user-modal
+      [task]="task"
+      [isOpen]="isUserModalOpen"
+      (close)="closeUserModal()">
+    </app-totals-user-modal>
 
     <!-- Modal de Selección de Etiquetas -->
     <app-tag-selection-modal *ngIf="isTagSelectionModalOpen" [task]="task" (close)="closeTagSelectionModal()"></app-tag-selection-modal>
