@@ -39,7 +39,7 @@ export class UserModalReccomendedComponent {
           if(this.task){
             this.eventService.notifyTaskUpdated(this.task.id);
           }
-          this.closeModal(); // Close the modal after assigning the user
+          this.closeModal(); 
         },
         (error) => {
           console.error('Error al asignar usuario a la tarea:', error);

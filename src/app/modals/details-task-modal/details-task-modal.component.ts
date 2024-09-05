@@ -74,37 +74,48 @@ export class TaskDetailsModalComponent implements OnInit, OnChanges {
   }
 
   getRecommendations(): void {
-    if (this.task) {
-      this.isLoading = true;
-      const requiredSkillsNormalized = this.task.requiredSkillsNormalized ?? '';
-      const requiredExpertiseNormalized = this.task.requiredExpertiseNormalized ?? '';
-      const descriptionNormalized = this.task.descriptionNormalized ?? '';
+      if (this.task) {
+          this.isLoading = true;
+          const requiredSkillsNormalized = this.task.requiredSkillsNormalized ?? '';
+          const requiredExpertiseNormalized = this.task.requiredExpertiseNormalized ?? '';
+          const descriptionNormalized = this.task.descriptionNormalized ?? '';
 
-      this.recommendedService.getSimilarity(
-        requiredSkillsNormalized,
-        requiredExpertiseNormalized,
-        descriptionNormalized
-      ).subscribe(
-        (recommendedProfiles: UserProfileRecommend[]) => {
-          const recommendedEmails = recommendedProfiles.map(profile => profile.email);
-          this.userService.getAllUsers().subscribe(
-            (allUsers: UserDto[]) => {
-              this.recommendedUsers = allUsers.filter(user => recommendedEmails.includes(user.email));
-              console.log('Usuarios recomendados:', this.recommendedUsers);
-              this.isLoading = false;
-              this.isUserModalOpenRecommend = true; // Abre el modal después de obtener las recomendaciones
-            },
-            (error) => {
-              console.error('Error fetching all users:', error);
-              this.isLoading = false;
-            }
+          this.recommendedService.getSimilarity(
+              requiredSkillsNormalized,
+              requiredExpertiseNormalized,
+              descriptionNormalized
+          ).subscribe(
+              (recommendedProfiles: UserProfileRecommend[]) => {
+                  const recommendedEmails = recommendedProfiles.map(profile => profile.email);
+                  
+                  // Mapeo de email a similarity para fácil acceso
+                  const emailToSimilarityMap = new Map(recommendedProfiles.map(profile => [profile.email, profile.similarity]));
+
+                  this.userService.getAllUsers().subscribe(
+                      (allUsers: UserDto[]) => {
+                          this.recommendedUsers = allUsers
+                              .filter(user => recommendedEmails.includes(user.email))
+                              .map(user => {
+                                  // Agregar la propiedad similarity si coincide el email
+                                  user.similarity = emailToSimilarityMap.get(user.email);
+                                  return user;
+                              });
+                          
+                          console.log('Usuarios recomendados:', this.recommendedUsers);
+                          this.isLoading = false;
+                          this.isUserModalOpenRecommend = true; // Abre el modal después de obtener las recomendaciones
+                      },
+                      (error) => {
+                          console.error('Error fetching all users:', error);
+                          this.isLoading = false;
+                      }
+                  );
+              },
+              (error) => {
+                  console.error('Error fetching recommendations:', error);
+                  this.isLoading = false;
+              }
           );
-        },
-        (error) => {
-          console.error('Error fetching recommendations:', error);
-          this.isLoading = false;
-        }
-      );
-    }
+      }
   }
 }

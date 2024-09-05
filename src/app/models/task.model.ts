@@ -68,6 +68,7 @@ export interface UserDto {
   skills?: string;
   expertise?: string;
   image?: string;
+  similarity?: number;
 }
 
 export interface UserProfileRecommend {
